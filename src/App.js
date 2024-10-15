@@ -147,7 +147,15 @@ const CompetitionWebsite = () => {
         <div className={`fixed bottom-0 left-0 w-full ${darkMode ? 'bg-gray-800' : 'bg-orange-100'} p-2 sm:p-4`}>
           <div className="max-w-7xl mx-auto flex justify-between items-center">
             <div className="text-xs sm:text-sm text-gray-500">
-              <span>Készítette: Tom Hevesi</span>
+              <span>Készítette: </span>
+              <a 
+                href="https://portfolio-tom-hevesi.vercel.app" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="hover:text-orange-500 transition-colors"
+              >
+                Tom Hevesi
+              </a>
             </div>
             <div className="flex items-center">
               <div className="flex space-x-2 sm:space-x-4">
@@ -163,7 +171,7 @@ const CompetitionWebsite = () => {
         </div>
       </div>
 
-     
+    
       <div className="fixed bottom-14 sm:bottom-16 right-2 sm:right-4 flex flex-col items-end">
         <div className="flex space-x-2 mb-2">
           <Code className="text-orange-500" size={24} />
