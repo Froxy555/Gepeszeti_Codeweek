@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Clock, Code, Trophy, Sun, Moon } from 'lucide-react';
+import { Calendar, Clock, Code, Trophy, Sun, Moon, ExternalLink, Menu } from 'lucide-react';
 import bobImage from './bob.png';
 import logoImage from './logo2.png';
 
@@ -7,15 +7,16 @@ const CompetitionWebsite = () => {
   const [activeTab, setActiveTab] = useState('home');
   const [darkMode, setDarkMode] = useState(true);
   const [timeLeft, setTimeLeft] = useState({});
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
       const difference = +new Date('2024-10-21') - +new Date();
       setTimeLeft({
-        napok: Math.floor(difference / (1000 * 60 * 60 * 24)),
-        órák: Math.floor((difference / (1000 * 60 * 60)) % 24),
-        percek: Math.floor((difference / 1000 / 60) % 60),
-        másodpercek: Math.floor((difference / 1000) % 60),
+        nap: Math.floor(difference / (1000 * 60 * 60 * 24)),
+        óra: Math.floor((difference / (1000 * 60 * 60)) % 24),
+        perc: Math.floor((difference / 1000 / 60) % 60),
+        másodperc: Math.floor((difference / 1000) % 60),
       });
     }, 1000);
 
@@ -99,9 +100,9 @@ const CompetitionWebsite = () => {
   return (
     <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>
       <header className="bg-gradient-to-r from-orange-500 to-pink-500 text-white p-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between">
-          <div className="flex items-center mb-4 sm:mb-0">
-            <img src={logoImage} alt="CodeWeek Logo" className="h-10 w-auto mr-2 sm:mr-4" />
+        <div className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="flex items-center">
+            <img src={logoImage} alt="CodeWeek Logo" className="h-10 w-auto mr-4" />
             <h1 className="text-2xl sm:text-4xl font-bold">CodeWeek Gépészeti 2024</h1>
           </div>
           <button onClick={() => setDarkMode(!darkMode)} className="p-2 rounded-full bg-white text-gray-800">
@@ -110,40 +111,50 @@ const CompetitionWebsite = () => {
         </div>
       </header>
 
-      <div className="max-w-7xl mx-auto mt-4 sm:mt-8 p-4">
-        <nav className="mb-6 sm:mb-8 overflow-x-auto">
-          <ul className="flex space-x-2 sm:space-x-4 border-b border-gray-300 whitespace-nowrap">
-            {['home', 'challenges', 'registration', 'faq'].map((tab) => (
-              <li key={tab} className="flex-shrink-0">
-                <button
-                  className={`py-2 px-3 sm:px-4 text-sm sm:text-base ${activeTab === tab ? 'border-b-2 border-orange-500 text-orange-500' : darkMode ? 'text-gray-400' : 'text-gray-600'}`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {{'home': 'Kezdőlap', 'challenges': 'Kihívások', 'registration': 'Regisztráció', 'faq': 'GYIK'}[tab]}
-                </button>
+      <nav className="bg-gray-800 text-white py-2">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ul className="flex flex-wrap justify-center sm:justify-start space-x-2 sm:space-x-4">
+            {['home', 'challenges', 'registration', 'faq', 'codeweekeu'].map((tab) => (
+              <li key={tab} className="my-1">
+                {tab === 'codeweekeu' ? (
+                  <a
+                    href="https://codeweek.eu"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="py-2 px-3 text-sm sm:text-base block hover:bg-gray-700 transition-colors rounded"
+                  >
+                    CodeWeekEU <ExternalLink size={16} className="inline ml-1" />
+                  </a>
+                ) : (
+                  <button
+                    className={`py-2 px-3 text-sm sm:text-base ${activeTab === tab ? 'bg-gray-700' : 'hover:bg-gray-700'} transition-colors rounded`}
+                    onClick={() => setActiveTab(tab)}
+                  >
+                    {{'home': 'Kezdőlap', 'challenges': 'Kihívások', 'registration': 'Regisztráció', 'faq': 'GYIK'}[tab]}
+                  </button>
+                )}
               </li>
             ))}
           </ul>
-        </nav>
+        </div>
+      </nav>
 
+      <div className="max-w-7xl mx-auto mt-8 p-4">
         <main className="mb-24">
           {renderContent()}
         </main>
 
         <div className={`fixed bottom-0 left-0 w-full ${darkMode ? 'bg-gray-800' : 'bg-orange-100'} p-2 sm:p-4`}>
           <div className="max-w-7xl mx-auto flex justify-between items-center">
-            <div className="text-sm">
-              <a href="https://portfolio-tom-hevesi.vercel.app" target="_blank" rel="noopener noreferrer" className="hover:text-orange-500 transition-colors">
-                Készítette: Tom Hevesi
-              </a>
+            <div className="text-xs sm:text-sm text-gray-500">
+              <span>Készítette: Tom Hevesi</span>
             </div>
             <div className="flex items-center">
-              <h2 className="text-lg sm:text-xl font-bold mr-2 sm:mr-4">Visszaszámláló</h2>
               <div className="flex space-x-2 sm:space-x-4">
                 {Object.entries(timeLeft).map(([unit, value]) => (
                   <div key={unit} className="text-center">
-                    <span className="text-xl sm:text-2xl font-bold">{value}</span>
-                    <span className="block text-xs sm:text-sm">{unit}</span>
+                    <span className="text-lg sm:text-xl font-bold">{value}</span>
+                    <span className="block text-xs">{unit}</span>
                   </div>
                 ))}
               </div>
@@ -152,17 +163,17 @@ const CompetitionWebsite = () => {
         </div>
       </div>
 
-      <div className="fixed bottom-20 right-2 sm:right-4 flex flex-col space-y-2">
-        <Code className="text-orange-500" size={24} />
-        <Trophy className="text-yellow-500" size={24} />
-      </div>
-
-      {}
-      <div className="fixed bottom-2 right-2 sm:bottom-4 sm:right-4">
-        <img src={bobImage} alt="Bob Character" className="h-32 sm:h-48" />
+     
+      <div className="fixed bottom-14 sm:bottom-16 right-2 sm:right-4 flex flex-col items-end">
+        <div className="flex space-x-2 mb-2">
+          <Code className="text-orange-500" size={24} />
+          <Trophy className="text-yellow-500" size={24} />
+        </div>
+        <img src={bobImage} alt="Bob Character" className="h-24 sm:h-32" />
       </div>
     </div>
   );
 };
+
 
 export default CompetitionWebsite;
